@@ -13,8 +13,9 @@ from terigrapi.methods.public.password_publickeys import GetPasswordPublicKeyMet
 
 
 class PasswordMixin(IClient):
-    async def password_encrypt(self, password):
-        pub = await self(GetPasswordPublicKeyMethod())
+    async def password_encrypt(self, password, **kwargs):
+        pub = await self(GetPasswordPublicKeyMethod(**kwargs))
+
         session_key = get_random_bytes(32)
 
         iv = get_random_bytes(12)

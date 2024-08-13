@@ -15,7 +15,7 @@ from terigrapi.client.exeptions import TwoFactorRequired, BadCredentials
 
 
 class AuthMixin(IClient):
-    async def sync_launcher(self, login: bool = False):
+    async def sync_launcher(self, login: bool = False, **kwargs):
         """
         Sync Launcher
 
@@ -30,8 +30,8 @@ class AuthMixin(IClient):
             A dictionary of response from the call
         """
         if login:
-            return await self(SyncLoginLauncherMethod())
-        return await self(SyncLauncherMethod())
+            return await self(SyncLoginLauncherMethod(**kwargs))
+        return await self(SyncLauncherMethod(**kwargs))
 
     async def pre_login_flow(self, login: bool = False) -> bool:
         """
@@ -45,7 +45,7 @@ class AuthMixin(IClient):
         await self.sync_launcher(True)
         return True
 
-    async def one_tap_app_login(self, user_id: int, nonce: str) -> bool:
+    async def one_tap_app_login(self, user_id: int, nonce: str, **kwargs) -> bool:
         """One tap login emulation
 
         Parameters
@@ -60,13 +60,12 @@ class AuthMixin(IClient):
         bool
             A boolean value
         """
-        return await self(OneTapAppLoginMethod(user_id=user_id, login_nonce=nonce))
+        return await self(
+            OneTapAppLoginMethod(user_id=user_id, login_nonce=nonce, **kwargs)
+        )
 
     async def login(
-        self,
-        username: str,
-        password: str,
-        verification_code: str = "",
+        self, username: str, password: str, verification_code: str = "", **kwargs
     ) -> bool:
         """
         Login
@@ -92,7 +91,9 @@ class AuthMixin(IClient):
         enc_password = await self.password_encrypt(password)
         try:
             authorization_data = await self(
-                AccountLoginMethod(username=username, enc_password=enc_password)
+                AccountLoginMethod(
+                    username=username, enc_password=enc_password, **kwargs
+                )
             )
         except TwoFactorRequired as e:
             if not verification_code.strip():
@@ -117,20 +118,23 @@ class AuthMixin(IClient):
             self.setting.username = username
             await self.close()
             return True
-    
+
     async def close(self):
         self.setting.cookies = self.sessions[ClientApiType.PRIVATE].get_cookies_dict()
         for s in self.sessions.values():
             await s.close()
-        
 
-    async def logout(self, on_tap_app_login: bool = True):
+    async def logout(self, on_tap_app_login: bool = True, **kwargs):
         from terigrapi.methods.private import AccountLogoutMethod
 
-        result = await self(AccountLogoutMethod(one_tap_app_login=on_tap_app_login))
+        result = await self(
+            AccountLogoutMethod(one_tap_app_login=on_tap_app_login, **kwargs)
+        )
         return result["status"] == "ok"
 
-    async def get_timeline_feed(self, options: list[str] = ["pull_to_refresh"]) -> dict:
+    async def get_timeline_feed(
+        self, options: list[str] = ["pull_to_refresh"], **kwargs
+    ) -> dict:
         """
         Get your timeline feed
 
@@ -146,14 +150,20 @@ class AuthMixin(IClient):
         """
         if "pull_to_refresh" in options:
             return await self(
-                GetTimelineFeedMethod(reason="pull_to_refresh", is_pull_to_refresh="1")
+                GetTimelineFeedMethod(
+                    reason="pull_to_refresh", is_pull_to_refresh="1", **kwargs
+                )
             )
         if "cold_start_fetch" in options:
             return await self(
-                GetTimelineFeedMethod(reason="cold_start_fetch", is_pull_to_refresh="0")
+                GetTimelineFeedMethod(
+                    reason="cold_start_fetch", is_pull_to_refresh="0", **kwargs
+                )
             )
 
-    async def get_reels_tray_feed(self, reason: str = "pull_to_refresh") -> dict:
+    async def get_reels_tray_feed(
+        self, reason: str = "pull_to_refresh", **kwargs
+    ) -> dict:
         """
         Get your reels tray feed
 
@@ -167,4 +177,4 @@ class AuthMixin(IClient):
         Dict
             A dictionary of response from the call
         """
-        return await self(GetReelsTrayFeedMethod(reason=reason))
+        return await self(GetReelsTrayFeedMethod(reason=reason, **kwargs))
