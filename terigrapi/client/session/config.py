@@ -20,7 +20,7 @@ class SessionConfig(BaseModel):
         populate_by_name=True,
         arbitrary_types_allowed=True,
     )
-    api_url: str | None = None
+    api_url: str = None
     base_headers: dict[str, str | BaseDefault] | BaseDefault = Field(default_factory=dict)
     cookeis: dict[str, str | BaseDefault] | BaseDefault = Field(default_factory=dict)
     kwargs: dict | BaseDefault = Field(default_factory=dict)
@@ -65,13 +65,13 @@ DEFAULT_API_SESSION_CONFIG = {
         kwargs=dict(verify=False, timeout=45, follow_redirects=True)
     ),
     ClientApiType.UNSET: SessionConfig(
-        api_url=None,
+        api_url="",
         base_headers={},
         cookeis={},
         kwargs={}
     ),
     ClientApiType.OTHER: SessionConfig(
-        api_url=None,
+        api_url="",
         base_headers={},
         cookeis={},
         kwargs=dict(verify=False)

@@ -20,7 +20,7 @@ class ClientUUIDs(BaseModel):
 class ClientAuthorization(BaseModel):
     ds_user_id: str
     sessionid: str 
-    should_use_header_over_cookies: bool = None
+    should_use_header_over_cookies: bool | None = None
 
     def authorization_header(self):
         b64part = base64.b64encode(self.model_dump_json(exclude='should_use_header_over_cookies').encode()).decode()

@@ -1,10 +1,10 @@
-
 from typing import TYPE_CHECKING, AsyncGenerator, Any, cast
 from types import TracebackType
 from abc import ABC, abstractmethod
 from terigrapi.client.default import BaseDefault
 from .middlewares.manager import RequestMiddlewareManager
 from terigrapi.methods.base import InstagramMethod, InstagramType
+
 if TYPE_CHECKING:
     from terigrapi.client import Client
     from .config import SessionConfig
@@ -29,10 +29,10 @@ class BaseSession(ABC):
         traceback: TracebackType = None,
     ) -> None:
         await self.close()
-    
+
     def _preparate_data(self, value):
         if isinstance(value, BaseDefault):
-           return value(self.client, self.config)
+            return value(self.client, self.config)
         if isinstance(value, dict):
             return {k: self._preparate_data(v) for k, v in value.items()}
         if isinstance(value, list):
@@ -40,9 +40,11 @@ class BaseSession(ABC):
         if isinstance(value, set):
             return {self._preparate_data(x) for x in value}
         return value
-    
+
     @abstractmethod
-    async def make_request(self, client: "Client", method: InstagramMethod[InstagramType]):
+    async def make_request(
+        self, client: "Client", method: InstagramMethod[InstagramType]
+    ):
         """Make request to API"""
         pass
 
@@ -60,7 +62,13 @@ class BaseSession(ABC):
         """
         yield b""
 
-    
+    @abstractmethod
+    def get_cookies_dict(self):
+        """
+        Private api return cookies data for save session
+        """
+        pass
+
     @abstractmethod
     async def close(self) -> None:  # pragma: no cover
         """
@@ -68,17 +76,14 @@ class BaseSession(ABC):
         """
         pass
 
-
     async def __call__(
         self,
         method: InstagramMethod[InstagramType],
     ) -> InstagramType:
         # Request middleware
         callback = RequestMiddlewareManager._warp_middlewares(
-            method.__options__.middlewares,
-            self.make_request
+            method.__options__.middlewares, self.make_request
         )
         # Session middleware
         middleware = self.middleware.wrap_middlewares(callback)
         return cast(InstagramType, await middleware(client=self.client, method=method))
-

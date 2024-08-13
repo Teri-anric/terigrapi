@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import random
 from typing import Any, TYPE_CHECKING
 
 from terigrapi.client.utils import generate_jazoest
@@ -20,7 +21,7 @@ class DefaultFromSettings(BaseDefault):
     __slots__ = ("_parts", "format")
 
     def __init__(self, parts: str, /, format: str = None) -> None:
-        self._parts = tuple(parts.split('.'))
+        self._parts = tuple(parts.split("."))
         self.format = format
 
     @property
@@ -40,11 +41,18 @@ class DefaultFromSettings(BaseDefault):
                 value = getattr(value, part)
             if self.format:
                 return self.format.format(value)
-            return value 
+            return value
         except AttributeError:
             return None
 
 
+class RandIntStringDefault(BaseDefault):
+    def __init__(self, a: int, b: int) -> None:
+        self.a = a
+        self.b = b
+
+    def __call__(self, client: "Client", config: "SessionConfig") -> Any:
+        return str(random.randint(self.a, self.b))
 
 
 class JazoestPhoneIdDefault(BaseDefault):
