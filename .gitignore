@@ -150,9 +150,7 @@ CONTRIBUTING.md
 docker-compose.yml 
 LICENSE 
 mkdocs.yml 
-README.md 
 requirements-test.txt 
-requirements.txt 
 SECURITY.md 
 setup.py 
 tests.py
