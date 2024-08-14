@@ -28,7 +28,7 @@ class DirectThread(MutableInstagramObject):
     relevancy_score_expr: int
     oldest_cursor: str
     newest_cursor: str
-    inviter: User
-    thread_languages: dict[str, str] # paris user_id to language
+    inviter: User | None = None
+    thread_languages: dict[str, str] | None = None # paris user_id to language
     last_permanent_item: DirectItem | None = None
 

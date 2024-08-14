@@ -1,12 +1,7 @@
 import asyncio
-import datetime
-import enum
-import json
 import random
 import string
 import time
-import urllib
-from uuid import uuid4
 
 
 class InstagramIdCodec:
@@ -39,35 +34,6 @@ class InstagramIdCodec:
             num += alphabet.index(char) * (base**power)
             idx += 1
         return num
-
-
-class InstagrapiJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, enum.Enum):
-            return obj.value
-        elif isinstance(obj, datetime.time):
-            return obj.strftime("%H:%M")
-        elif isinstance(obj, (datetime.datetime, datetime.date)):
-            return int(obj.strftime("%s"))
-        elif isinstance(obj, set):
-            return list(obj)
-        return json.JSONEncoder.default(self, obj)
-
-
-def dumps(data):
-    """Json dumps format as required Instagram"""
-    return InstagrapiJSONEncoder(separators=(",", ":")).encode(data)
-
-
-def generate_signature(data):
-    """Generate signature of POST data for Private API
-
-    Returns
-    -------
-    str
-        e.g. "signed_body=SIGNATURE.test"
-    """
-    return "signed_body=SIGNATURE.{data}".format(data=urllib.parse.quote_plus(data))
 
 
 def json_value(data, *args, default=None):
@@ -105,7 +71,7 @@ def date_time_original(localtime):
     # return time.strftime("%Y:%m:%d+%H:%M:%S", localtime)
     return time.strftime("%Y%m%dT%H%M%S.000Z", localtime)
 
+
 async def random_delay(delay_range: list):
     """Trigger sleep of a random floating number in range min_sleep to max_sleep"""
     return await asyncio.sleep(random.uniform(delay_range[0], delay_range[1]))
-

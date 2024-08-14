@@ -6,6 +6,8 @@ from ..base import (
     ClientApiType,
 )
 from ...client.default import DefaultFromSettings
+from terigrapi.constants import SUPPORTED_CAPABILITIES
+
 
 __all__ = ["GetReelsTrayFeedMethod"]
 
@@ -24,9 +26,7 @@ class GetReelsTrayFeedMethod(InstagramMethod[Dict]):
 
     reason: str = "pull_to_refresh"
 
-    supported_capabilities_new: str = DefaultFromSettings(
-        "config.SUPPORTED_CAPABILITIES"
-    )
+    supported_capabilities_new: list[dict[str, str]] = SUPPORTED_CAPABILITIES
     timezone_offset: str = DefaultFromSettings("timezone_offset")
     tray_session_id: str = DefaultFromSettings("uuids.tray_session_id")
     request_id: str = DefaultFromSettings("uuids.request_id")

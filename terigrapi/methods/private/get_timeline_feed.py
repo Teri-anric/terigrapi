@@ -1,7 +1,7 @@
 import random
 from pydantic import Field
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
-from ...client.default import DefaultFromSettings, RandIntStringDefault
+from ...client.default import DefaultCsrftoken, DefaultFromSettings, RandIntStringDefault
 
 __all__ = ["GetTimelineFeedMethod"]
 
@@ -29,7 +29,7 @@ class GetTimelineFeedMethod(InstagramMethod[dict]):
 
     phone_id: str = DefaultFromSettings("uuids.phone_id")
     uuid: str = DefaultFromSettings("uuids.uuid")
-    token: str = Field(DefaultFromSettings("token"), alias="_csrftoken")
+    csrftoken: str = Field(DefaultCsrftoken(), alias="_csrftoken")
     request_id: str = DefaultFromSettings("uuids.request_id")
     client_session_id: str = DefaultFromSettings("uuids.client_session_id")
     bloks_versioning_id: str = DefaultFromSettings("bloks_versioning_id")

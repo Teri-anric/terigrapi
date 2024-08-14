@@ -1,10 +1,11 @@
+from typing import Any
 from .base import MutableInstagramObject
 
 
 
 class GrowthFrictionInfo(MutableInstagramObject):
     has_active_interventions: bool
-    interventions: dict[str]
+    interventions: dict[str, Any]
 
 
 class ShortUser(MutableInstagramObject):

@@ -1,19 +1,23 @@
-from typing import MutableMapping
+from typing import MutableMapping, TYPE_CHECKING
 from pydantic import Field
 
+
 from terigrapi.client.exeptions import ClientError
+from terigrapi.client.session.types import Response
 from terigrapi.types.password_publickeys import PasswordPublicKey
-from ..base import InstagramMethod, MethodRequestOptions, ClientApiType, ReturnBuild
+from ..base import InstagramMethod, MethodRequestOptions, ClientApiType, ResultBuild
 from ...client.session.middlewares.suppress import SuppressErrorHandler
 
+if TYPE_CHECKING:
+    from terigrapi.client.client import Client
 
 __all__ = ["GetPasswordPublicKeyMethod"]
 
 
-class PasswordPublicKeyReturn(ReturnBuild):
-    def __call__(self, method: InstagramMethod, headers: MutableMapping[str, str] = None, cookies: MutableMapping[str, str] = None, content: bytes = None, error: Exception = None):
-        publickey_id = headers.get("ig-set-password-encryption-key-id")
-        publickey = headers.get("ig-set-password-encryption-pub-key")
+class PasswordPublicKeyReturn(ResultBuild):
+    def __call__(self, client: "Client", method: InstagramMethod, response: Response):
+        publickey_id = response.headers.get("ig-set-password-encryption-key-id")
+        publickey = response.headers.get("ig-set-password-encryption-pub-key")
         return PasswordPublicKey(publickey_id=publickey_id, publickey=publickey)
 
 

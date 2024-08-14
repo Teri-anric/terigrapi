@@ -3,7 +3,7 @@ from ..base import (
     InstagramMethod,
     MethodRequestOptions,
     ClientApiType)
-from terigrapi.client.default import DefaultFromSettings
+from terigrapi.client.default import DefaultCsrftoken, DefaultFromSettings
 
 __all__ = ["OneTapAppLoginMethod"]
 
@@ -27,4 +27,4 @@ class OneTapAppLoginMethod(InstagramMethod[bool]):
     adid: str = DefaultFromSettings("uuids.advertising_id")
     guid: str = DefaultFromSettings("uuids.uuid")
     device_id: str = DefaultFromSettings("uuids.uuid")
-    token: str = Field(DefaultFromSettings("token"), alias="_csrftoken")
+    csrftoken: str = Field(DefaultCsrftoken(), alias="_csrftoken")

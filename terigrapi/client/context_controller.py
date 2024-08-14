@@ -7,7 +7,6 @@ if TYPE_CHECKING:
     from .client import Client
 
 
-
 class ClientContextController(BaseModel):
     _client: Optional["Client"] = PrivateAttr()
 

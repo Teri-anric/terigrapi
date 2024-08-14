@@ -9,7 +9,7 @@ class DirectItem(InstagramObject):
     timestamp: int
     item_type: str
     media_share: MediaShare | None = None
-    media: ...
+    media: dict = None
     text: str | None = None
     action_log: ActionLog | None = None
     client_context: str
@@ -18,5 +18,5 @@ class DirectItem(InstagramObject):
     is_shh_mode: bool
     is_sent_by_viewer: bool
     reactions: Reactions | None = None
-    tq_seq_id: int
+    tq_seq_id: int = None
     uq_seq_id: int

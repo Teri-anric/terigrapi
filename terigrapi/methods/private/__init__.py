@@ -7,3 +7,4 @@ from .get_timeline_feed import GetTimelineFeedMethod
 from .one_tap_app_login import OneTapAppLoginMethod
 from .direct_threads import DirectThreadsMethod
 from .direct_pending_threads import DirectPrndingThreadsMethod
+from .direct_thread import DirectThreadMethod

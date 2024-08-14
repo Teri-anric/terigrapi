@@ -1,7 +1,7 @@
 from typing import Any, MutableMapping
 from pydantic import Field
 
-from ..base import InstagramMethod, MethodRequestOptions, ClientApiType, ReturnBuild
+from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
 
 
 __all__ = ["AccountLogoutMethod"]

@@ -1,7 +1,6 @@
 from pydantic import Field
-from ..base import InstagramMethod, MethodRequestOptions, ClientApiType, ReturnNoneBuild
-from ...client.default import DefaultFromSettings
-from ...client.settings import ClientSetting
+from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
+from ...client.default import DefaultCsrftoken, DefaultFromSettings
 
 
 class SyncLoginLauncherMethod(InstagramMethod[dict]):
@@ -25,6 +24,4 @@ class SyncLauncherMethod(SyncLoginLauncherMethod):
     """
     uid: str = Field(DefaultFromSettings("authorization_data.ds_user_id"), alias="_uid")
     uuid: str = Field(DefaultFromSettings("uuids.uuid"), alias="_uuid")
-    csrftoken: str = Field(DefaultFromSettings("token"), alias="_csrftoken")
-
-
+    csrftoken: str = Field(DefaultCsrftoken(), alias="_csrftoken")

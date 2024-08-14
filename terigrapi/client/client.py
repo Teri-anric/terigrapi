@@ -1,14 +1,15 @@
-import time
 from typing import Any, TypeVar
 
-from terigrapi.client.exeptions import TwoFactorRequired
 
 from .settings import ClientSetting
-from .session import BaseSession, InstagramMethod
-from .session import Session
-from .session import SessionConfig, DEFAULT_API_SESSION_CONFIG
+from .session import (
+    BaseSession,
+    HttpxSession,
+    SessionConfig,
+    DEFAULT_API_SESSION_CONFIG,
+)
+from terigrapi.methods import InstagramMethod
 from terigrapi.enum import ClientApiType
-from typing import Coroutine
 from .mixins import PasswordMixin, AuthMixin, DirectMixin
 
 
@@ -20,14 +21,19 @@ class Client(PasswordMixin, AuthMixin, DirectMixin):
     def __init__(
         self,
         setting: ClientSetting = None,
+        *,
+        sessions: dict[ClientApiType, BaseSession] = None,
         session_configs: dict[ClientApiType, SessionConfig] = None,
+        session_default_cls: type[BaseSession] = HttpxSession,
     ) -> None:
         self.setting = setting or ClientSetting()
         # create sessions
-        self.sessions = {}
-        configs = DEFAULT_API_SESSION_CONFIG | (session_configs or {})
-        for api_type, config in configs.items():
-            self.sessions[api_type] = Session(self, config)
+        session_configs = DEFAULT_API_SESSION_CONFIG | (session_configs or {})
+        self.sessions = sessions or {}
+        for api_type, config in session_configs.items():
+            if api_type in self.sessions:
+                continue
+            self.sessions[api_type] = session_default_cls(config)
 
     async def __call__(self, method: InstagramMethod[T]) -> T:
         """
@@ -40,4 +46,4 @@ class Client(PasswordMixin, AuthMixin, DirectMixin):
         if session is None:
             raise RuntimeError("Client session not fround.")
 
-        return await session(method)
+        return await session(self, method)

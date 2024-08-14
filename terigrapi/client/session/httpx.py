@@ -1,53 +1,14 @@
 from httpx import AsyncClient, Response
-from terigrapi.client.utils import generate_signature, dumps
-from terigrapi.enum import ClientApiType
-import httpx
-import orjson
 from .base import BaseSession
-import httpx
-import orjson
 import zstandard as zstd
-from httpx import (
-    Request,
-    CloseError,
-    ConnectError,
-    ConnectTimeout,
-    CookieConflict,
-    DecodingError,
-    HTTPError,
-    HTTPStatusError,
-    InvalidURL,
-    LocalProtocolError,
-    NetworkError,
-    PoolTimeout,
-    ProtocolError,
-    ProxyError,
-    ReadError,
-    ReadTimeout,
-    RemoteProtocolError,
-    RequestError,
-    TimeoutException,
-    TooManyRedirects,
-    TransportError,
-    UnsupportedProtocol,
-    WriteError,
-    WriteTimeout,
-)
+from httpx import ConnectError, DecodingError, HTTPError, ReadError
 from httpx._client import ClientState
 from httpx._decoders import SUPPORTED_DECODERS, ContentDecoder
 
 
 from typing import TYPE_CHECKING, AsyncGenerator, Any
-from types import TracebackType
-from abc import ABC, abstractmethod
-from terigrapi.methods.base import (
-    InstagramMethod,
-    InstagramType,
-    MethodRequestOptions,
-    ReturnBuild,
-)
+from terigrapi.methods.base import InstagramMethod, InstagramType
 from terigrapi.client.exeptions import (
-    ClientJSONDecodeError,
     ClientRequestTimeout,
     ClientUnauthorizedError,
     ClientForbiddenError,
@@ -58,9 +19,10 @@ from terigrapi.client.exeptions import (
     ClientConnectionError,
 )
 
+from .types import Response as ResponseModel
+
 if TYPE_CHECKING:
     from terigrapi.client import Client as InstagramClient
-    from .config import SessionConfig
 
 
 class ZstdDecoder(ContentDecoder):
@@ -88,7 +50,7 @@ class ZstdDecoder(ContentDecoder):
 SUPPORTED_DECODERS["zstd"] = ZstdDecoder
 
 
-class Session(BaseSession):
+class HttpxSession(BaseSession):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._client = None
@@ -98,55 +60,41 @@ class Session(BaseSession):
 
     @property
     def http_client(self) -> AsyncClient:
-        if self._client is None or self._client._state is ClientState.CLOSED: 
+        if self._client is None or self._client._state is ClientState.CLOSED:
             self._client = AsyncClient(
                 base_url=self.config.api_url,
-                cookies=self._preparate_data(self.config.cookeis),
+                cookies=self.config.cookeis,
                 **self.config.kwargs,
             )
         return self._client
 
-    async def _make_request(self, method: InstagramMethod[InstagramType]) -> Response:
+    async def _make_request(
+        self, client: "InstagramClient", method: InstagramMethod[InstagramType]
+    ) -> Response:
         if self.http_client._state is ClientState.UNOPENED:
             await self.http_client.__aenter__()
 
-        request = self.biuld_request(method=method)
+        request = self.biuld_request(client, method=method)
 
-        return await self.http_client.send(request)
-
-    def response_load(
-        self, method: InstagramMethod[InstagramType], response: Response
-    ) -> InstagramType:
-        try:
-            options = method.__options__
-            if isinstance(options.returning, ReturnBuild):
-                return options.returning(
-                    method, response.headers, response.cookies, response.content
-                )
-
-            json_data = orjson.loads(response.content)
-
-            if isinstance(json_data, dict):
-                return options.returning(**json_data)
-            if isinstance(json_data, list):
-                return options.returning(*json_data)
-            return options.returning(json_data)
-
-        except orjson.JSONDecodeError as e:
-            raise ClientJSONDecodeError(
-                "JSONDecodeError {0!s} while opening {1!s}".format(e, response.url),
-                response=response,
-            )
+        return await self.http_client.request(
+            request.method, request.url, data=request.data, headers=request.headers
+        )
 
     async def make_request(
-        self, client, method: InstagramMethod[InstagramType]
+        self, client: "InstagramClient", method: InstagramMethod[InstagramType]
     ) -> InstagramType:
         response = None
         result = None
         try:
-            response = await self._make_request(method)
-            result = self.response_load(method, response)
-            response.raise_for_status()
+            http_response = await self._make_request(client, method)
+            response = ResponseModel(
+                headers=http_response.headers,
+                cookies=http_response.cookies,
+                content=http_response.content,
+                status_code=http_response.status_code,
+            )
+            result = self.load_response(client, method, response)
+            http_response.raise_for_status()
             return result
 
         except HTTPError as e:
@@ -171,33 +119,6 @@ class Session(BaseSession):
             raise ClientConnectionError(
                 "{} {}".format(e.__class__.__name__, str(e))
             ) from e
-
-    def method_dump(self, method: InstagramMethod[InstagramType], *args, **kwargs):
-        return self._preparate_data(
-            method.model_dump(*args, **kwargs, by_alias=True, warnings=False)
-        )
-
-    def biuld_request(self, method: InstagramMethod[InstagramType]) -> Request:
-        options = method.__options__
-
-        kwargs = {}
-        kwargs["headers"] = self._clear_dict_none(
-            self._preparate_data(self.config.base_headers)
-            | self._preparate_data(options.headers)
-        )
-        if options.method in ("POST", "PUT", "PATCH"):
-            kwargs["data"] = self.method_dump(method, exclude=options.query_fields)
-            kwargs["params"] = self.method_dump(method, include=options.query_fields)
-
-            if options.with_signature:
-                kwargs["data"] = generate_signature(dumps(kwargs["data"]))
-
-        if options.method in ("GET", "DELETE"):
-            kwargs["params"] = self.method_dump(method)
-
-        return self.http_client.build_request(
-            options.method, options.endpoint, **kwargs
-        )
 
     async def close(self):
         if self.http_client and self.http_client._state is ClientState.OPENED:

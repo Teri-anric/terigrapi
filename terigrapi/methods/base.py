@@ -5,22 +5,17 @@ from typing import (
     TYPE_CHECKING,
     Any,
     ClassVar,
-    Dict,
     Generator,
     Generic,
-    Optional,
-    TypeVar,
     Literal,
-    Callable,
-    MutableMapping,
 )
-from enum import Enum
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.functional_validators import model_validator
 
 
 if TYPE_CHECKING:
     from ..client import Client
+    from ..client.session.types import Response
 from ..client.context_controller import ClientContextController
 from ..enum import ClientApiType
 from ..constants import UNSET_TYPE, InstagramType
@@ -28,47 +23,26 @@ from ..client.session.middlewares.base import BaseRequestMiddleware
 from ..client.default import BaseDefault
 
 
-# class Request(BaseModel):
-#     model_config = ConfigDict(arbitrary_types_allowed=True)
 
-#     method: str
-
-#     data: Dict[str, Optional[Any]]
-#     # files: Optional[Dict[str, InputFile]]
-
-
-# class Response(BaseModel, Generic[InstagramType]):
-#     ok: bool
-#     result: Optional[InstagramType] = None
-#     description: Optional[str] = None
-#     error_code: Optional[int] = None
-
-
-class ReturnBuild(ABC):
+class ResultBuild(ABC):
     @abstractmethod
     def __call__(
         self,
+        client: "Client",
         method: "InstagramMethod",
-        headers: MutableMapping[str, str] = None,
-        cookies: MutableMapping[str, str] = None,
-        content: bytes = None,
-        error: Exception = None,
+        response: "Response"
     ):
         pass
 
 
-class ReturnNoneBuild(ReturnBuild):
-    def __call__(self, _, __, ___, ____):
-        return None
-
-
 class MethodRequestOptions(BaseModel):
-    returning: type | ReturnBuild
     method: Literal["GET", "OPTIONS", "HEAD", "POST", "PUT", "PATCH", "DELETE"]
     endpoint: str
+    returning: type | ResultBuild | None = None
     api_type: ClientApiType = ClientApiType.UNSET
     with_signature: bool = True
     query_fields: set[str] = Field(default_factory=set)
+    path_fields: set[str] = Field(default_factory=set)
     headers: dict[str, str | BaseDefault | None] | BaseDefault = Field(
         default_factory=dict
     )
@@ -88,7 +62,7 @@ class InstagramMethod(ClientContextController, BaseModel, Generic[InstagramType]
 
     @model_validator(mode="before")
     @classmethod
-    def remove_unset(cls, values: Dict[str, Any]) -> Dict[str, Any]:
+    def remove_unset(cls, values: dict[str, Any]) -> dict[str, Any]:
         """
         Remove UNSET before fields validation.
         """

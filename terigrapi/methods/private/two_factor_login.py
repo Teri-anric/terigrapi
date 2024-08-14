@@ -2,7 +2,7 @@ from pydantic import Field
 
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
 from .login import AuthorizationDataReturn
-from ...client.default import DefaultFromSettings
+from ...client.default import DefaultCsrftoken, DefaultFromSettings
 from ...client.settings import ClientAuthorization
 from ...utils import generate_str_uuid
 
@@ -24,7 +24,7 @@ class TwoFactorAccountLoginMethod(InstagramMethod[ClientAuthorization]):
     two_factor_identifier: str = None
 
     phone_id: str =  DefaultFromSettings("uuids.phone_id")
-    csrftoken: str = Field(DefaultFromSettings("token"), alias="_csrftoken")
+    csrftoken: str = Field(DefaultCsrftoken(), alias="_csrftoken")
     waterfall_id: str = Field(default_factory=generate_str_uuid)
     trust_this_device: str = "0"
     guid: str = DefaultFromSettings("uuids.uuid")

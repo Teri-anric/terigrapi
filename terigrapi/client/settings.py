@@ -6,7 +6,6 @@ from .utils import gen_token
 from terigrapi.utils import generate_android_device_id, generate_str_uuid
 
 
-
 class ClientUUIDs(BaseModel):
     phone_id: str = Field(default_factory=generate_str_uuid)
     uuid: str = Field(default_factory=generate_str_uuid)
@@ -19,15 +18,19 @@ class ClientUUIDs(BaseModel):
 
 class ClientAuthorization(BaseModel):
     ds_user_id: str
-    sessionid: str 
+    sessionid: str
     should_use_header_over_cookies: bool | None = None
 
     def authorization_header(self):
-        b64part = base64.b64encode(self.model_dump_json(exclude='should_use_header_over_cookies').encode()).decode()
+        b64part = base64.b64encode(
+            self.model_dump_json(exclude="should_use_header_over_cookies").encode()
+        ).decode()
         return f"Bearer IGT:2:{b64part}"
-    
+
     @classmethod
-    def from_authorization_header(cls, authorization: str) -> Optional["ClientAuthorization"]:
+    def from_authorization_header(
+        cls, authorization: str
+    ) -> Optional["ClientAuthorization"]:
         try:
             b64part = authorization.rsplit(":", 1)[-1]
             if b64part:
@@ -64,7 +67,7 @@ class ClientSetting(BaseModel):
     last_login: float = None
 
     uuids: ClientUUIDs = Field(..., default_factory=ClientUUIDs)
-    authorization_data: ClientAuthorization = None # decoded authorization header
+    authorization_data: ClientAuthorization = None  # decoded authorization header
     device_settings: ClientDevice = Field(..., default_factory=ClientDevice)
     cookies: dict[str, str] = Field(..., default_factory=dict)
 
@@ -73,15 +76,15 @@ class ClientSetting(BaseModel):
     ig_www_claim: str = "0"
     user_agent: str = None
     country: str = "UA"
-    country_code: int = 1 # Phone code, default USA
-    timezone_offset: int = 10800 # Київ, GMT+3 in seconds
+    country_code: int = 1  # Phone code, default USA
+    timezone_offset: int = 10800  # Київ, GMT+3 in seconds
 
     @model_validator(mode="after")
     def post_init_logic(cls, values):
         # If `mid` is not provided, get it from cookies
         if values.mid is None:
-            values.mid = values.cookies.get('mid')
-        
+            values.mid = values.cookies.get("mid")
+
         # If `user_agent` is not provided, generate it using device_settings
         if values.user_agent is None:
             values.user_agent = values.device_settings.to_user_agent()

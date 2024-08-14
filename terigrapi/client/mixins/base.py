@@ -1,4 +1,3 @@
-
 from typing import TypeVar
 from terigrapi.client.session.base import BaseSession
 from terigrapi.client.settings import ClientSetting
@@ -9,18 +8,18 @@ from terigrapi.methods.base import InstagramMethod
 
 T = TypeVar("T")
 
+
 class IClient(ABC):
     setting: ClientSetting
     sessions: dict[ClientApiType, BaseSession]
 
     @abstractmethod
-    async def __call__(
-        self, method: InstagramMethod[T]
-    ) -> T:
+    async def __call__(self, method: InstagramMethod[T]) -> T:
         """
         Call API method
 
         :param method:
         :return:
         """
+
     pass

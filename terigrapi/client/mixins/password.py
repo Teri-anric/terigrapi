@@ -8,7 +8,6 @@ from Cryptodome.Cipher import AES, PKCS1_v1_5
 from Cryptodome.PublicKey import RSA
 from Cryptodome.Random import get_random_bytes
 
-from terigrapi.client.exeptions import ClientError
 from terigrapi.methods.public.password_publickeys import GetPasswordPublicKeyMethod
 
 
