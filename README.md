@@ -1,5 +1,6 @@
 <meta property="og:image" content="assets/banner-mini.png">
-<img src="assets/banner-mini.png">
+
+![Banner](assets/banner-mini.png)
 
 # terigrapi - Asynchronous Instagram API for Python
 
