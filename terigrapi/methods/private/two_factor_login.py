@@ -1,7 +1,7 @@
 from pydantic import Field
 
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
-from .login import AuthorizationDataReturn
+from ..return_builds import AuthorizationDataReturn
 from ...client.default import DefaultCsrftoken, DefaultFromSettings
 from ...client.settings import ClientAuthorization
 from ...utils import generate_str_uuid

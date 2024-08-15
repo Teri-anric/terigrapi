@@ -1,6 +1,8 @@
 from typing import Any, Generic, Literal, MutableMapping
+import orjson
 from pydantic import BaseModel, ConfigDict
 
+from terigrapi.client.exeptions import ClientJSONDecodeError
 from terigrapi.constants import InstagramType
 
 
@@ -19,3 +21,12 @@ class Response(BaseModel):
     cookies: MutableMapping[str, str]
     content: bytes | str
     status_code: int | None
+
+    def json(self):
+        try:
+            return orjson.loads(self.content)
+        except orjson.JSONDecodeError as e:
+            raise ClientJSONDecodeError(
+                "JSONDecodeError {0!s} ".format(e),
+                response=self,
+            )

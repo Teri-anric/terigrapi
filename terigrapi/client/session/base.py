@@ -2,9 +2,7 @@ from typing import TYPE_CHECKING, AsyncGenerator, Any, cast
 from types import TracebackType
 from abc import ABC, abstractmethod
 
-import orjson
 from terigrapi.client.default import BaseDefault
-from terigrapi.client.exeptions import ClientJSONDecodeError
 
 from .middlewares.manager import RequestMiddlewareManager
 from terigrapi.methods import InstagramMethod, ResultBuild
@@ -143,23 +141,16 @@ class BaseSession(ABC):
         method: InstagramMethod[InstagramType],
         response: Response,
     ) -> InstagramType:
-        try:
-            options = method.__options__
-            if options.returning is None or options.returning is UNSET:
-                return
-            if isinstance(options.returning, ResultBuild):
-                return options.returning(client, method, response)
-
-            json_data = orjson.loads(response.content)
-
-            if isinstance(json_data, dict):
-                return options.returning(**json_data)
-            if isinstance(json_data, list):
-                return options.returning(*json_data)
-            return options.returning(json_data)
-
-        except orjson.JSONDecodeError as e:
-            raise ClientJSONDecodeError(
-                "JSONDecodeError {0!s} while opening {1!s}".format(e, response.url),
-                response=response,
-            )
+        options = method.__options__
+        if options.returning is None or options.returning is UNSET:
+            return
+        if isinstance(options.returning, ResultBuild):
+            return options.returning(client, method, response)
+        # load json
+        json_data = response.json()
+        # return model
+        if isinstance(json_data, dict):
+            return options.returning(**json_data)
+        if isinstance(json_data, list):
+            return options.returning(*json_data)
+        return options.returning(json_data)
