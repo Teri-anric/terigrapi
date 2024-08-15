@@ -1,3 +1,6 @@
+from .direct_story import DirectStory
+from .media import Media
+from .theme import Theme
 from .base import MutableInstagramObject
 from .user import User
 from .last_seen import LastSeen
@@ -35,11 +38,11 @@ class DirectThread(MutableInstagramObject):
     marked_as_unread: bool
     is_creator_subscriber_thread: bool
     group_link_joinable_mode: int
-    thread_image: dict | None = None
+    thread_image: Media | None = None
     shh_replay_enabled: bool
     instamadillo_cutover_metadata: None
     ad_context_data: None
-    theme_data: dict | None = None
+    theme_data: Theme | None = None
     snippet: dict
     is_fanclub_subscriber_thread: bool
     last_mentioned_item_timestamp_us: None
@@ -111,7 +114,7 @@ class DirectThread(MutableInstagramObject):
     ig_thread_capabilities: dict
     is_stale: bool = False
     creator_agent_enabled: bool
-    direct_story: dict | None = None
+    direct_story: DirectStory | None = None
     boards_call_data: None
     is_appointment_booking_enabled: bool
     unpublished_pro_page_id: int | None = None

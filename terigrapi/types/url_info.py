@@ -11,6 +11,6 @@ class ImageUrlInfo(InstagramObject):
     scans_profile: str | None = None
     estimated_scans_sizes: list[int] = None
 
-class VideoUrlInfo(InstagramObject):
+class VideoUrlInfo(ImageUrlInfo):
     id: str = ""
     type: int

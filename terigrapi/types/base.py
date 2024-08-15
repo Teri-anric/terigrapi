@@ -9,7 +9,7 @@ from ..client.context_controller import ClientContextController
 class InstagramObject(ClientContextController, BaseModel):
     model_config = ConfigDict(
         use_enum_values=True,
-        extra="allow",
+        extra="forbid", # forbid allow
         validate_assignment=True,
         frozen=True,
         populate_by_name=True,

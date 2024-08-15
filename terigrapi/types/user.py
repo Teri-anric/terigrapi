@@ -2,20 +2,25 @@ from .base import MutableInstagramObject, InstagramObject
 
 
 class FriendshipStatus(InstagramObject):
-    following: bool
+    following: bool = False
     followed_by: bool = False
     blocking: bool
-    muting: bool
-    is_private: bool
-    incoming_request: bool
-    outgoing_request: bool
-    is_bestie: bool
-    is_restricted: bool
+    muting: bool = False
+    is_private: bool = False
+    incoming_request: bool = False
+    outgoing_request: bool = False
+    is_bestie: bool = False
+    is_restricted: bool = False
     reachability_status: int | None = None
-    is_feed_favorite: bool
+    is_feed_favorite: bool = False
+    is_unavailable: bool = False
+    is_messaging_only_blocking: bool = False
+    is_messaging_pseudo_blocking: bool = False
+    is_viewer_unconnected: bool | None = None
 
 
 class User(MutableInstagramObject):
+    id: str = None
     pk_id: str
     pk: int
     username: str
@@ -24,8 +29,8 @@ class User(MutableInstagramObject):
     profile_pic_url: str
     profile_pic_id: str | None = None
     friendship_status: FriendshipStatus | None = None
-    account_badges: list
-    has_anonymous_profile_picture: bool
+    account_badges: list = None
+    has_anonymous_profile_picture: bool = False
     is_unpublished: bool = False
     is_favorite: bool = False
     latest_reel_media: int | None = None
@@ -46,3 +51,5 @@ class User(MutableInstagramObject):
     wa_eligibility: int = None
     wa_addressable: bool = None
     strong_id__: str
+    reachability_status: int = None
+    is_active: bool = False

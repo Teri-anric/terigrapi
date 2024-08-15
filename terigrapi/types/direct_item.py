@@ -1,11 +1,17 @@
+from __future__ import annotations
 from typing import Literal
 
+from .link import Link
+from .expired_placeholder import ExpiredPlaceholder
+from .voice_media import VoiceMedia
+from .visual_media import VisualMedia
 from .xma_media_share import XmaMediaShare
 from .base import InstagramObject
-from .media_share import MediaShare
+from .media import Media
 from .action_log import ActionLog
 from .reactions import Reactions
 from .xma_link import XmaLink
+
 
 class DirectItem(InstagramObject):
     message_id: str
@@ -27,11 +33,12 @@ class DirectItem(InstagramObject):
         "xma_clip",
         "xma_media_share",
         "xma_link",
-        "expired_placeholder"
+        "expired_placeholder",
     ]
-    media_share: MediaShare | None = None
-    visual_media: dict = None
-    media: dict | None = None
+    media_share: Media | None = None
+    visual_media: VisualMedia = None
+    media: Media | None = None
+    processed_business_suggestion: bool = False
     text: str | None = None
     action_log: ActionLog | None = None
     xma_link: list[XmaLink] = None
@@ -56,9 +63,9 @@ class DirectItem(InstagramObject):
     genai_params: dict
     send_attribution: str = None
     xma_clip: list = None
-    voice_media: dict = None
-    replied_to_message: dict = None
+    voice_media: VoiceMedia = None
+    replied_to_message: DirectItem = None
     auxiliary_text: str = None
-    expired_placeholder: dict = None
+    expired_placeholder: ExpiredPlaceholder = None
     message_item_type: str = None
-    link: dict | None = None
+    link: Link | None = None
