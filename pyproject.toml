@@ -2,15 +2,15 @@
 requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+packages = ["terigrapi"]
 
 [project]
 name = "terigrapi"
-dynamic =  ["version"]
+dynamic = ["version"]
 description = "A Python client library for interacting with Instagram's API"
 readme = "README.md"
-authors = [
-    { name = "Teri_anric", email = "2005ahi2005@gmail.com"}
-]
+authors = [{ name = "Teri_anric", email = "2005ahi2005@gmail.com" }]
 license = { text = "MIT" }
 requires-python = ">=3.11.9"
 dependencies = [
@@ -18,7 +18,7 @@ dependencies = [
     "orjson~=3.10.6",
     "pydantic~=2.8.2",
     "pycryptodomex~=3.20.0",
-    "zstandard~=0.23.0"
+    "zstandard~=0.23.0",
 ]
 
 [project.urls]
@@ -26,4 +26,4 @@ author = "https://github.com/Teri-anric"
 
 
 [tool.setuptools.dynamic]
-version = { attr = "terigrapi.__meta__.VERSION"}
+version = { attr = "terigrapi.__meta__.VERSION" }
