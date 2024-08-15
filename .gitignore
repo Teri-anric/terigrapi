@@ -139,22 +139,7 @@ dmypy.json
 *.iml
 
 # OLD CODE
+tests
+
 aiograpi
-.bandit 
-.dockerignore 
-.flake8 
-.isort.cfg 
-.pre-commit-config.yaml 
-CODE_OF_CONDUCT.md 
-CONTRIBUTING.md 
-docker-compose.yml 
-mkdocs.yml 
-requirements-test.txt 
-SECURITY.md 
-setup.py 
-tests.py
-util
 docs
-cl.json
-session.json
-.html

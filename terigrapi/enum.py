@@ -10,4 +10,5 @@ class ClientApiType(str, Enum):
 
 class MediaType(IntEnum):
     voice_media = 11
-    visual_media = 2
+    visual_media_photo = 1
+    visual_media_video = 2

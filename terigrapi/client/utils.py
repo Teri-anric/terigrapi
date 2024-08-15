@@ -1,4 +1,4 @@
-import asyncio
+import hashlib
 import random
 import string
 import time
@@ -67,11 +67,14 @@ def generate_jazoest(symbols: str) -> str:
     return f"2{amount}"
 
 
-def date_time_original(localtime):
-    # return time.strftime("%Y:%m:%d+%H:%M:%S", localtime)
-    return time.strftime("%Y%m%dT%H%M%S.000Z", localtime)
+def generate_android_device_id() -> str:
+        """
+        Helper to generate Android Device ID
 
+        Returns
+        -------
+        str
+            A random android device id
+        """
+        return "android-%s" % hashlib.sha256(str(time.time()).encode()).hexdigest()[:16]
 
-async def random_delay(delay_range: list):
-    """Trigger sleep of a random floating number in range min_sleep to max_sleep"""
-    return await asyncio.sleep(random.uniform(delay_range[0], delay_range[1]))

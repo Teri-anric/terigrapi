@@ -2,8 +2,10 @@ from typing import Optional
 from uuid import uuid4
 import base64
 from pydantic import BaseModel, AnyUrl, Field, model_validator, root_validator
+
+from terigrapi.client.utils import generate_android_device_id
 from .utils import gen_token
-from terigrapi.utils import generate_android_device_id, generate_str_uuid
+from terigrapi.utils import generate_str_uuid
 
 
 class ClientUUIDs(BaseModel):

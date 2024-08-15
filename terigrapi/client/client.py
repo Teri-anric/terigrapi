@@ -1,3 +1,4 @@
+from types import TracebackType
 from typing import Any, TypeVar
 
 
@@ -47,3 +48,15 @@ class Client(PasswordMixin, AuthMixin, DirectMixin):
             raise RuntimeError("Client session not fround.")
 
         return await session(self, method)
+
+    
+    async def __aenter__(self) -> "Client":
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] = None,
+        exc_value: BaseException = None,
+        traceback: TracebackType = None,
+    ) -> None:
+        await self.close()
