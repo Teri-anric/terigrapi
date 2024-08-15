@@ -2,6 +2,7 @@ from .base import MutableInstagramObject
 
 
 class FullUser(MutableInstagramObject):
+    id: str
     pk: int
     pk_id: str
     full_name: str
@@ -13,7 +14,6 @@ class FullUser(MutableInstagramObject):
     third_party_downloads_enabled: int
     strong_id__: str
     is_using_unified_inbox_for_direct: bool
-    id: str
     profile_pic_id: str
     profile_pic_url: str
     is_verified: bool

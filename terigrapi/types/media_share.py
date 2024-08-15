@@ -1,3 +1,4 @@
+from terigrapi.enum import MediaType
 from .image_verison_2 import ImageVersions2
 from .media_caption import MediaCaption
 from .music_metadata import MusicMetadata
@@ -26,7 +27,7 @@ class MediaShare(MutableInstagramObject):
     pk: int
     id: str
     device_timestamp: int
-    media_type: int
+    media_type: MediaType
     code: str
     client_cache_key: str
     filter_type: int

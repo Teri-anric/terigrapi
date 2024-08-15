@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum, IntEnum
 
 class ClientApiType(str, Enum):
     PRIVATE = "private"
@@ -7,3 +7,7 @@ class ClientApiType(str, Enum):
     UNSET = "unset"
     OTHER = "other"
 
+
+class MediaType(IntEnum):
+    voice_media = 11
+    visual_media = 2

@@ -10,7 +10,7 @@ class EmojiData(InstagramObject):
 
 
 class Reactions(MutableInstagramObject):
-    likes: list
+    likes: list[int]
     emojis: list[EmojiData]
     likes_count: int
 
