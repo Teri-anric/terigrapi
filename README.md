@@ -1,3 +1,6 @@
+<meta property="og:image" content="assets/banner.png">
+<img src="assets/banner.png">
+
 # terigrapi - Asynchronous Instagram API for Python
 
 **terigrapi** is an asynchronous Python client for the Instagram API, heavily inspired by the original [aiograpi](https://github.com/subzeroid/aiograpi) library. While aiograpi served as the foundation, terigrapi improves upon it by restructuring all methods using classes, enhancing type definitions to ensure complete and accurate results, and setting the stage for a more robust and maintainable codebase.
