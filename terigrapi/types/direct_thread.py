@@ -32,7 +32,7 @@ class DirectThread(MutableInstagramObject):
     oldest_cursor: str
     newest_cursor: str
     inviter: User | None = None
-    thread_languages: dict[str, str] | None = None # paris user_id to language
+    thread_languages: dict[str, str] | None = None  # paris user_id to language
     last_permanent_item: DirectItem | None = None
     is_xac_thread: bool
     marked_as_unread: bool
@@ -118,3 +118,15 @@ class DirectThread(MutableInstagramObject):
     boards_call_data: None
     is_appointment_booking_enabled: bool
     unpublished_pro_page_id: int | None = None
+
+    async def seen(self, **kwargs):
+        if not self.items:
+            raise ValueError("Can't seen thread, thread not items.")
+
+        return await self.client.seen_thread_item(
+            thread_id=self.thread_v2_id, item_id=self.items[0].item_id, **kwargs
+        )
+
+    async def answer(self, text: str, **kwargs):
+        return await self.client.send_thread(self.thread_v2_id, text, **kwargs)
+    

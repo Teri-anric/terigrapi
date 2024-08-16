@@ -78,3 +78,14 @@ def generate_android_device_id() -> str:
         """
         return "android-%s" % hashlib.sha256(str(time.time()).encode()).hexdigest()[:16]
 
+
+def generate_mutation_token() -> str:
+    """
+    Token used when DM sending and upload media
+
+    Returns
+    -------
+    str
+        A stringified int
+    """
+    return str(random.randint(6800011111111111111, 6800099999999999999))

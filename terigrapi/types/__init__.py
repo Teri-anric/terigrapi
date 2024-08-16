@@ -9,7 +9,8 @@ from .direct_thread import DirectThread
 from .last_seen import LastSeen
 from .media import Media
 from .reactions import Reactions, EmojiData
-from .user import User, FriendshipStatus
+from .user import User
+from .friendship_status import FriendshipStatus
 from .short_user import ShortUser, GrowthFrictionInfo
 from .full_user import FullUser
 from .direct import Direct

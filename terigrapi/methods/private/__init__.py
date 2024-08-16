@@ -8,3 +8,5 @@ from .one_tap_app_login import OneTapAppLoginMethod
 from .direct_threads import DirectThreadsMethod
 from .direct_pending_threads import DirectPrndingThreadsMethod
 from .direct_thread import DirectThreadMethod
+from .send_direct_message import SendDirectMessageMethod
+from .send_direct_seen import SendThreadSeenMethod

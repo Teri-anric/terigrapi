@@ -1,6 +1,8 @@
 from types import TracebackType
 from typing import Any, TypeVar
 
+from .context_controller import ClientContextController
+
 
 from .settings import ClientSetting
 from .session import (
@@ -46,8 +48,13 @@ class Client(PasswordMixin, AuthMixin, DirectMixin):
         session = self.sessions.get(method.__options__.api_type, None)
         if session is None:
             raise RuntimeError("Client session not fround.")
-
-        return await session(self, method)
+        
+        result = await session(self, method)
+        # bind by self(Client)
+        if isinstance(result, ClientContextController):
+            result.as_(client=self)
+        return result
+        
 
     
     async def __aenter__(self) -> "Client":
