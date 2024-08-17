@@ -1,2 +1,2 @@
 from .client import Client, ClientSetting
-from . import enums, methods, types
+from . import enum, methods, types

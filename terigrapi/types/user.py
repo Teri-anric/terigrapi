@@ -31,6 +31,7 @@ class User(MutableInstagramObject):
     is_eligible_for_igd_stacks: bool = None
     is_creator_agent_enabled: bool = None
     biz_user_inbox_state: int = None
+    third_party_downloads_enabled: int = None
     wa_eligibility: int = None
     wa_addressable: bool = None
     strong_id__: str

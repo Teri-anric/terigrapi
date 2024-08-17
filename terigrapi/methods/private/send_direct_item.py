@@ -11,10 +11,10 @@ from ...client.utils import generate_mutation_token
 from ...client.session.utils import ig_dumps
 
 
-__all__ = ["SendDirectMessageMethod"]
+__all__ = ["SendDirectItemMethod"]
 
 
-class SendDirectMessageMethod(DefaultDataModel, InstagramMethod[DirectItem]):
+class SendDirectItemMethod(DefaultDataModel, InstagramMethod[DirectItem]):
     """
     Send a direct message to list of users or threads
     """
@@ -28,15 +28,11 @@ class SendDirectMessageMethod(DefaultDataModel, InstagramMethod[DirectItem]):
         path_fields={"method"},
     )
 
-    method: Literal["text", "link"]
+    method: Literal["text", "link", "media_share", "story_share", "configure_video", "configure_photo"]
 
+    
     thread_ids: list[int] | str = UNSET  # ig_dump()
     recipient_users: list[int] | str = UNSET  # ig_dump()
-
-    text: str = UNSET
-    # or
-    link_text: str = UNSET
-    link_urls: str = UNSET  # ig_dumps(re.findall(r"(https?://[^\s]+)", text))
 
     client_context: str = UNSET  # generate_mutation_token
     mutation_token: str = UNSET  # generate_mutation_token
@@ -44,24 +40,12 @@ class SendDirectMessageMethod(DefaultDataModel, InstagramMethod[DirectItem]):
 
     action: str = "send_item"
     is_shh_mode: str = "0"
-    send_attribution: str = "direct_thread"
-    nav_chain: str = (
-        "1qT:feed_timeline:1,1qT:feed_timeline:2,1qT:feed_timeline:3,7Az:direct_inbox:4,7Az:direct_inbox:5,5rG:direct_thread:7"
-    )
-
+    
     @field_validator("thread_ids", "recipient_users", mode="before")
     @classmethod
     def serialize_list_fields(cls, value):
         if isinstance(value, list):
             return ig_dumps(value)
-        return value
-
-    @field_validator("link_urls")
-    @classmethod
-    def generate_link_urls(cls, value, info):
-        if value is UNSET and "link_text" in info.data:
-            link_text = info.data["link_text"]
-            return ig_dumps(re.findall(r"(https?://[^\s]+)", link_text))
         return value
 
     @model_validator(mode="before")

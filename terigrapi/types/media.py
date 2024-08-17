@@ -76,3 +76,13 @@ class Media(MutableInstagramObject):
     create_mode_attribution: None = None
     creative_config: None = None
     audio: Audio = None
+
+    @property
+    def full_media_id(self):
+        media_id = str(self.pk or self.id)
+        if "_" in media_id:
+            return media_id
+        if not self.user:
+            raise ValueError("Can't build media_id, media obj has not user")
+        return f"{media_id}_{self.user.pk_id}"
+        

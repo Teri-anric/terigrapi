@@ -13,7 +13,7 @@ class Request(BaseModel):
     url: str
     headers: dict[str, str]
     params: dict[str, Any] | None
-    data: dict[str, Any] | None
+    data: dict[str, Any] | str | None
 
 
 class Response(BaseModel):

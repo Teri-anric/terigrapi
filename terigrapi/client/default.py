@@ -74,12 +74,39 @@ class DefaultFromSettings(BaseDefault):
 
 
 class RandIntStringDefault(BaseDefault):
+    __slots__ = ("a", "b")
+
     def __init__(self, a: int, b: int) -> None:
         self.a = a
         self.b = b
 
     def __call__(self, client: "Client", session: "BaseSession") -> Any:
         return str(random.randint(self.a, self.b))
+
+
+class RandChoicesDefault(BaseDefault):
+    __slots__ = ("population", "weights", "cum_weights", "k")
+
+    def __init__(
+        self,
+        population: list,
+        weights: list[float] = None,
+        *,
+        cum_weights: list[float] = None,
+        k: int = 1,
+    ) -> None:
+        self.population = population
+        self.weights = weights
+        self.cum_weights = cum_weights
+        self.k = k
+
+    def __call__(self, client: "Client", session: "BaseSession") -> Any:
+        return random.choices(
+            population=self.population,
+            weights=self.weights,
+            cum_weights=self.cum_weights,
+            k=self.k,
+        )
 
 
 class JazoestPhoneIdDefault(BaseDefault):

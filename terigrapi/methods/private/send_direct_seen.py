@@ -12,7 +12,7 @@ class SendThreadSeenMethod(InstagramMethod[DirectThread], DefaultDataModel):
 
     __options__ = MethodRequestOptions(
         returning=dict,
-        method="GET",
+        method="POST",
         endpoint="/v1/direct_v2/threads/{thread_id}/items/{item_id}/seen/",
         api_type=ClientApiType.PRIVATE,
         with_signature=False,

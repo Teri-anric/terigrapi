@@ -14,3 +14,4 @@ from .friendship_status import FriendshipStatus
 from .short_user import ShortUser, GrowthFrictionInfo
 from .full_user import FullUser
 from .direct import Direct
+from .direct_search import DirectSearch, RankedRecipient
