@@ -1,5 +1,6 @@
 from typing import Any
 from .base import MutableInstagramObject
+from .shorts_mixin import UserShortsMixin
 
 
 
@@ -8,7 +9,7 @@ class GrowthFrictionInfo(MutableInstagramObject):
     interventions: dict[str, Any]
 
 
-class ShortUser(MutableInstagramObject):
+class ShortUser(MutableInstagramObject, UserShortsMixin):
     pk: int
     username: str
     full_name: str

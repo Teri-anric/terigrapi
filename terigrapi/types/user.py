@@ -1,8 +1,8 @@
 from .friendship_status import FriendshipStatus
 from .base import MutableInstagramObject
+from .shorts_mixin import UserShortsMixin
 
-
-class User(MutableInstagramObject):
+class User(MutableInstagramObject, UserShortsMixin):
     id: str = None
     pk_id: str
     pk: int

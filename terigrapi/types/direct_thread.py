@@ -5,9 +5,10 @@ from .base import MutableInstagramObject
 from .user import User
 from .last_seen import LastSeen
 from .direct_item import DirectItem
+from .shorts_mixin import ThreadShortsMixin
 
 
-class DirectThread(MutableInstagramObject):
+class DirectThread(MutableInstagramObject, ThreadShortsMixin):
     has_older: bool
     has_newer: bool
     pending: bool
@@ -118,15 +119,3 @@ class DirectThread(MutableInstagramObject):
     boards_call_data: None
     is_appointment_booking_enabled: bool
     unpublished_pro_page_id: int | None = None
-
-    async def seen(self, **kwargs):
-        if not self.items:
-            raise ValueError("Can't seen thread, thread not items.")
-
-        return await self.client.seen_thread_item(
-            thread_id=self.thread_v2_id, item_id=self.items[0].item_id, **kwargs
-        )
-
-    async def answer(self, text: str, **kwargs):
-        return await self.client.send_thread(self.thread_v2_id, text, **kwargs)
-    

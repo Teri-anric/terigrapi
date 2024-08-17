@@ -1,7 +1,7 @@
 from .base import MutableInstagramObject
+from .shorts_mixin import UserShortsMixin
 
-
-class FullUser(MutableInstagramObject):
+class ViewerUser(MutableInstagramObject, UserShortsMixin):
     id: str
     pk: int
     pk_id: str

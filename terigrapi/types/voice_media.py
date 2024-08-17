@@ -1,8 +1,6 @@
 
 
 from typing import Literal
-
-from terigrapi.enum import MediaType
 from .media import Media
 from  .base import InstagramObject
 

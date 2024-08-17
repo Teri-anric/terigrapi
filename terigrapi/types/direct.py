@@ -1,10 +1,10 @@
 from .base import InstagramObject
-from .full_user import FullUser
+from .viewer_user import ViewerUser
 from .direct_inbox import DirectInbox
 
 
 class Direct(InstagramObject):
-    viewer: FullUser
+    viewer: ViewerUser
     inbox: DirectInbox
     seq_id: int
     snapshot_at_ms: int = None
