@@ -1,5 +1,5 @@
 from .base import MutableInstagramObject
-from .test_forrmatting import TextFormatting
+from .text_forrmatting import TextFormatting
 
 class ActionLog(MutableInstagramObject):
     description: str
