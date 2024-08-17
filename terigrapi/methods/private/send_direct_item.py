@@ -5,7 +5,7 @@ from pydantic import field_validator, model_validator
 
 from terigrapi.constants import UNSET
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
-from ...types import DirectItem
+from ...types import DirectResponse
 from ..utils import DefaultDataModel
 from ...client.utils import generate_mutation_token
 from ...client.session.utils import ig_dumps
@@ -14,13 +14,13 @@ from ...client.session.utils import ig_dumps
 __all__ = ["SendDirectItemMethod"]
 
 
-class SendDirectItemMethod(DefaultDataModel, InstagramMethod[DirectItem]):
+class SendDirectItemMethod(InstagramMethod[DirectResponse], DefaultDataModel):
     """
     Send a direct message to list of users or threads
     """
 
     __options__ = MethodRequestOptions(
-        returning=dict,  # DataExtractorReturn("payload", returning=DirectItem)
+        returning=DirectResponse,
         method="POST",
         endpoint="/v1/direct_v2/threads/broadcast/{method}/",
         with_signature=False,

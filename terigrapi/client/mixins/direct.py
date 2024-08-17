@@ -19,7 +19,7 @@ from terigrapi.methods.private import (
     SendVideoDirectMethod,
     DirectThreadActionMethod,
 )
-from terigrapi.types import Direct, DirectThread
+from terigrapi.types import Direct, DirectThread, DirectResponse
 
 from terigrapi.constants import UNSET
 
@@ -74,7 +74,7 @@ class DirectMixin(IClient):
             SendThreadSeenMethod(thread_id=thread_id, item_id=item_id, **kwargs)
         )
 
-    async def direct_message_delete(self, thread_id: int, item_id: int, **kwargs):
+    async def delete_direct_item(self, thread_id: int, item_id: int, **kwargs):
         """
         Delete a message from thread
         """
@@ -83,6 +83,7 @@ class DirectMixin(IClient):
         )
 
     async def send_thread(self, thread_ids: int | list[int], text: str, **kwargs):
+        """Send a text direct message to thread"""
         if not isinstance(thread_ids, list):
             thread_ids = [thread_ids]
         return await self.send_direct(text, [], thread_ids, **kwargs)
@@ -94,7 +95,7 @@ class DirectMixin(IClient):
         thread_ids: list[int] = UNSET,
         check_link: bool = False,
         **kwargs,
-    ):
+    ) -> DirectResponse:
         """Send a text direct message to list of users or threads"""
         if check_link and "http" in text:
             return await self(

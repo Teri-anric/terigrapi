@@ -2,18 +2,18 @@ from pydantic import Field
 from terigrapi.client.default import DefaultFromSettings
 from terigrapi.client.utils import generate_mutation_token
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
-from ...types import DirectThread
+from ...types import OkResponse
 
 __all__ = ["DeleteThreadItemMethod"]
 
 
-class DeleteThreadItemMethod(InstagramMethod[DirectThread]):
+class DeleteThreadItemMethod(InstagramMethod[OkResponse]):
     """
     Delete a message from thread
     """
 
     __options__ = MethodRequestOptions(
-        returning=dict,
+        returning=OkResponse,
         method="POST",
         endpoint="/v1/direct_v2/threads/{thread_id}/items/{item_id}/delete/",
         api_type=ClientApiType.PRIVATE,

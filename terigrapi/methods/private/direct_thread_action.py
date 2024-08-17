@@ -1,9 +1,8 @@
 from typing import Literal
 from pydantic import Field
 from terigrapi.client.default import DefaultFromSettings
-from terigrapi.constants import UNSET
+from ...types import OkResponse
 from ..base import InstagramMethod, MethodRequestOptions, ClientApiType
-from ..utils import DefaultDataModel
 
 __all__ = ["DirectThreadActionMethod"]
 
@@ -26,7 +25,7 @@ class DirectThreadActionMethod(InstagramMethod[dict]):
     """
 
     __options__ = MethodRequestOptions(
-        returning=dict,
+        returning=OkResponse,
         method="POST",
         endpoint="/v1/direct_v2/threads/{thread_id}/{action}/",
         api_type=ClientApiType.PRIVATE,
