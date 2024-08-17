@@ -16,7 +16,7 @@ class SendLinkDirectMethod(SendDirectItemMethod):
     link_text: str 
     link_urls: str = UNSET  # ig_dumps(re.findall(r"(https?://[^\s]+)", text))
     
-    method = "link"
+    method: str = "link"
     nav_chain: str = "1qT:feed_timeline:1,1qT:feed_timeline:2,1qT:feed_timeline:3,7Az:direct_inbox:4,7Az:direct_inbox:5,5rG:direct_thread:7"
     send_attribution: str = "direct_thread"
 

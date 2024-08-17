@@ -11,7 +11,7 @@ class SendVideoDirectMethod(SendDirectItemMethod):
 
     upload_id: str
 
-    method = "configure_video"
+    method: str = "configure_video"
     video_result: str = ""
     send_attribution: str = "direct_thread"
     nav_chain: str = RandChoicesDefault(

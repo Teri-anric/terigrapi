@@ -11,7 +11,7 @@ class SendPhotoDirectMethod(SendDirectItemMethod):
 
     upload_id: str
 
-    method = "configure_photo"
+    method: str = "configure_photo"
     send_attribution: str = "inbox"
     allow_full_aspect_ratio: str = "true"
     nav_chain: str = RandChoicesDefault(

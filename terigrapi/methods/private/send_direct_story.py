@@ -13,7 +13,7 @@ class SendStoryDirectMethod(SendDirectItemMethod):
     story_media_id: str # story_id
     reel_id: str = UNSET # story_pk
 
-    method = "story_share"
+    method: str = "story_share"
     send_attribution: str = "reel_feed_timeline"
     containermodule: str = "reel_feed_timeline"
     nav_chain: str = "1qT:feed_timeline:1,ReelViewerFragment:reel_feed_timeline:4,DirectShareSheetFragment:direct_reshare_sheet:5"
