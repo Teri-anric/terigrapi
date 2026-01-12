@@ -3,8 +3,6 @@ import orjson
 from pydantic import BaseModel, ConfigDict
 
 from terigrapi.client.exeptions import ClientJSONDecodeError
-from terigrapi.constants import InstagramType
-
 
 class Request(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
